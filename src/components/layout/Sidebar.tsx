@@ -32,40 +32,45 @@ const ICONS: Record<NavIconName, LucideIcon> = {
   settings: Settings,
 }
 
+const LOGO_SRC = `${import.meta.env.BASE_URL}logo.png`
+
 function BrandMark({ collapsed }: { collapsed: boolean }) {
   const [logoFailed, setLogoFailed] = useState(false)
 
+  // Match nav rows: 18px mark + text-sm label, no chrome/background
+  const logoImg = !logoFailed ? (
+    <img
+      src={LOGO_SRC}
+      alt=""
+      className={cn(
+        'shrink-0 bg-transparent object-contain object-left',
+        // Icon-height mark; width free so wordmark aspect stays clean
+        'h-[18px] w-auto max-w-[4.5rem]',
+      )}
+      onError={() => setLogoFailed(true)}
+      draggable={false}
+    />
+  ) : null
+
   if (collapsed) {
     return (
-      <span
-        className="select-none text-2xl font-semibold tracking-tight text-white"
-        aria-label="Cron"
-        style={{ fontFamily: '"Familjen Grotesk", sans-serif' }}
-      >
-        C
-      </span>
-    )
-  }
-
-  if (logoFailed) {
-    return (
-      <span
-        className="select-none text-[2.75rem] font-semibold leading-none tracking-tight text-white"
-        style={{ fontFamily: '"Familjen Grotesk", sans-serif' }}
-      >
-        Cron
-      </span>
+      <div className="flex items-center justify-center" aria-label="Cron">
+        {logoImg ?? (
+          <span className="select-none text-sm font-medium tracking-tight text-white">
+            C
+          </span>
+        )}
+      </div>
     )
   }
 
   return (
-    <img
-      src="/logo-large.png"
-      alt="Cron"
-      className="h-11 w-auto max-w-[200px] object-contain object-left sm:h-12"
-      onError={() => setLogoFailed(true)}
-      draggable={false}
-    />
+    <div className="flex min-w-0 items-center gap-2.5" aria-label="Cron">
+      {logoImg}
+      <span className="truncate text-sm font-medium tracking-tight text-white">
+        Cron
+      </span>
+    </div>
   )
 }
 
@@ -85,11 +90,11 @@ export function Sidebar() {
       )}
       aria-label="Primary"
     >
-      {/* Brand — large white wordmark, generous air */}
+      {/* Brand — logo + wordmark, same density as nav rows */}
       <div
         className={cn(
           'flex items-center border-b border-[#2A2A2A]',
-          collapsed ? 'justify-center px-2 py-6' : 'px-5 py-8',
+          collapsed ? 'justify-center px-2 py-3' : 'px-3 py-3',
         )}
       >
         <BrandMark collapsed={collapsed} />

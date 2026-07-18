@@ -11,32 +11,13 @@ import { useAppStore } from '@/stores/app-store'
 
 export default function App() {
   const activeRoute = useAppStore((s) => s.activeRoute)
-  // Force-replay: ?intro=1 clears the session flag so OpeningScene mounts
-  const [introDone, setIntroDone] = useState(() => {
-    try {
-      if (new URLSearchParams(window.location.search).get('intro') === '1') {
-        sessionStorage.removeItem('cron.intro.seen.v3')
-        sessionStorage.removeItem('cron.intro.seen')
-        sessionStorage.removeItem('cron.intro.seen.v2')
-      }
-    } catch {
-      /* ignore */
-    }
-    return !shouldShowIntro()
-  })
+
+  // Intro mounts by default (not gated by sessionStorage).
+  // Opt out: ?intro=0 or OS “Reduce motion”.
+  const [introDone, setIntroDone] = useState(() => !shouldShowIntro())
 
   const finishIntro = useCallback(() => {
     setIntroDone(true)
-    // Drop ?intro=1 from the URL after playing so refresh doesn't loop
-    try {
-      const url = new URL(window.location.href)
-      if (url.searchParams.has('intro')) {
-        url.searchParams.delete('intro')
-        window.history.replaceState({}, '', url.pathname + url.search + url.hash)
-      }
-    } catch {
-      /* ignore */
-    }
   }, [])
 
   let body: ReactNode
@@ -67,7 +48,7 @@ export default function App() {
         className={
           introDone
             ? 'opacity-100 transition-opacity duration-500'
-            : 'opacity-0'
+            : 'opacity-0 pointer-events-none'
         }
         aria-hidden={!introDone}
       >
