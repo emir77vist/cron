@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 
-const SESSION_KEY = 'cron.intro.seen'
+/** Bump when intro implementation changes so users see the new version once. */
+const SESSION_KEY = 'cron.intro.seen.v3'
 
 type Phase = 'scatter' | 'converge' | 'hold' | 'disperse' | 'done'
 
@@ -40,7 +41,6 @@ export function OpeningScene({ onComplete }: OpeningSceneProps) {
   const sizeRef = useRef({ w: 0, h: 0 })
   const finishedRef = useRef(false)
   const [fading, setFading] = useState(false)
-  const showSkip = true
 
   const shutdown = useCallback(() => {
     if (finishedRef.current) return
@@ -61,6 +61,7 @@ export function OpeningScene({ onComplete }: OpeningSceneProps) {
   }, [onComplete])
 
   useEffect(() => {
+    // Reduced motion: skip animation but still mark complete so app unlocks
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       shutdown()
       return
@@ -95,7 +96,6 @@ export function OpeningScene({ onComplete }: OpeningSceneProps) {
       const cy = h / 2
       const imgEl = logoImgRef.current
 
-      // Prefer logo pixel samples
       if (imgEl && imgEl.naturalWidth > 0) {
         try {
           const maxW = Math.min(w * 0.46, 460)
@@ -129,11 +129,11 @@ export function OpeningScene({ onComplete }: OpeningSceneProps) {
             }
           }
         } catch {
-          /* fall through to text */
+          /* fall through */
         }
       }
 
-      // Canvas text "Cron" as target cloud (always works)
+      // Always-works text cloud
       const off = document.createElement('canvas')
       off.width = 700
       off.height = 220
@@ -276,7 +276,6 @@ export function OpeningScene({ onComplete }: OpeningSceneProps) {
         ctx.fillRect(0, 0, w, h)
       }
 
-      // Soft logo underlay late in converge / hold
       if (
         logoImgRef.current &&
         logoImgRef.current.naturalWidth > 0 &&
@@ -366,11 +365,14 @@ export function OpeningScene({ onComplete }: OpeningSceneProps) {
     window.addEventListener('pointerleave', onLeave)
     window.addEventListener('keydown', onKey)
 
-    // Init immediately — never wait on logo for first paint
     createParticles()
     rafRef.current = requestAnimationFrame(loop)
 
-    // Load logo async; retarget when ready
+    // Logo with correct base path for GitHub Pages (/cron/)
+    const logoUrl = new URL(
+      'logo-large.png',
+      window.location.origin + import.meta.env.BASE_URL,
+    ).href
     const img = new Image()
     img.decoding = 'async'
     img.onload = () => {
@@ -378,11 +380,7 @@ export function OpeningScene({ onComplete }: OpeningSceneProps) {
       logoImgRef.current = img
       retargetToLogo()
     }
-    img.onerror = () => {
-      // keep text targets
-    }
-    img.src = '/logo-large.png'
-    // Cached image
+    img.src = logoUrl
     if (img.complete && img.naturalWidth > 0) {
       logoImgRef.current = img
       retargetToLogo()
@@ -417,7 +415,7 @@ export function OpeningScene({ onComplete }: OpeningSceneProps) {
         style={{ background: '#0a0a0a' }}
       />
 
-      {showSkip && !fading && (
+      {!fading && (
         <button
           type="button"
           onClick={shutdown}
@@ -435,8 +433,17 @@ export function OpeningScene({ onComplete }: OpeningSceneProps) {
   )
 }
 
+/**
+ * Show intro unless:
+ * - already seen this session (after complete/skip), OR
+ * - user prefers reduced motion, OR
+ * - force with ?intro=1 / ?intro=0
+ */
 export function shouldShowIntro(): boolean {
   try {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('intro') === '1') return true
+    if (params.get('intro') === '0') return false
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       return false
     }

@@ -11,9 +11,33 @@ import { useAppStore } from '@/stores/app-store'
 
 export default function App() {
   const activeRoute = useAppStore((s) => s.activeRoute)
-  const [introDone, setIntroDone] = useState(() => !shouldShowIntro())
+  // Force-replay: ?intro=1 clears the session flag so OpeningScene mounts
+  const [introDone, setIntroDone] = useState(() => {
+    try {
+      if (new URLSearchParams(window.location.search).get('intro') === '1') {
+        sessionStorage.removeItem('cron.intro.seen.v3')
+        sessionStorage.removeItem('cron.intro.seen')
+        sessionStorage.removeItem('cron.intro.seen.v2')
+      }
+    } catch {
+      /* ignore */
+    }
+    return !shouldShowIntro()
+  })
 
-  const finishIntro = useCallback(() => setIntroDone(true), [])
+  const finishIntro = useCallback(() => {
+    setIntroDone(true)
+    // Drop ?intro=1 from the URL after playing so refresh doesn't loop
+    try {
+      const url = new URL(window.location.href)
+      if (url.searchParams.has('intro')) {
+        url.searchParams.delete('intro')
+        window.history.replaceState({}, '', url.pathname + url.search + url.hash)
+      }
+    } catch {
+      /* ignore */
+    }
+  }, [])
 
   let body: ReactNode
   switch (activeRoute) {
