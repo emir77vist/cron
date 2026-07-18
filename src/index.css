@@ -1,0 +1,215 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource/familjen-grotesk/400.css";
+@import "@fontsource/familjen-grotesk/500.css";
+@import "@fontsource/familjen-grotesk/600.css";
+@import "@fontsource/familjen-grotesk/700.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ─────────────────────────────────────────────────────────────
+   Cron Design Tokens
+   Strict monochrome. No colored accents. No glass. No gradients.
+   Type: Familjen Grotesk — spacious, premium, Grok/SpaceX calm.
+   ───────────────────────────────────────────────────────────── */
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: "Familjen Grotesk", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-canvas: var(--cron-canvas);
+  --color-surface: var(--cron-surface);
+  --color-surface-raised: var(--cron-surface-raised);
+  --color-hairline: var(--cron-hairline);
+  --color-text-primary: var(--cron-text-primary);
+  --color-text-secondary: var(--cron-text-secondary);
+  --color-text-meta: var(--cron-text-meta);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --cron-canvas: #0a0a0a;
+  --cron-surface: #141414;
+  --cron-surface-raised: #1a1a1a;
+  --cron-hairline: #2a2a2a;
+  --cron-text-primary: #ffffff;
+  --cron-text-secondary: #888888;
+  --cron-text-meta: #555555;
+
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+  --card: #141414;
+  --card-foreground: #ffffff;
+  --popover: #141414;
+  --popover-foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-foreground: #0a0a0a;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #ffffff;
+  --muted: #1a1a1a;
+  --muted-foreground: #888888;
+  --accent: #1a1a1a;
+  --accent-foreground: #ffffff;
+  --destructive: #ffffff;
+  --border: #2a2a2a;
+  --input: #2a2a2a;
+  --ring: #555555;
+  --radius: 0.5rem;
+
+  --chart-1: #ffffff;
+  --chart-2: #888888;
+  --chart-3: #555555;
+  --chart-4: #2a2a2a;
+  --chart-5: #1a1a1a;
+
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #141414;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #2a2a2a;
+  --sidebar-ring: #555555;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+  --card: #141414;
+  --card-foreground: #ffffff;
+  --popover: #141414;
+  --popover-foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-foreground: #0a0a0a;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #ffffff;
+  --muted: #1a1a1a;
+  --muted-foreground: #888888;
+  --accent: #1a1a1a;
+  --accent-foreground: #ffffff;
+  --destructive: #ffffff;
+  --border: #2a2a2a;
+  --input: #2a2a2a;
+  --ring: #555555;
+  --chart-1: #ffffff;
+  --chart-2: #888888;
+  --chart-3: #555555;
+  --chart-4: #2a2a2a;
+  --chart-5: #1a1a1a;
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #141414;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #2a2a2a;
+  --sidebar-ring: #555555;
+}
+
+/* Subtle low-contrast dot-matrix — refined for depth without noise */
+.dot-matrix {
+  background-color: var(--cron-canvas);
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.035) 0.6px,
+    transparent 0.65px
+  );
+  background-size: 18px 18px;
+  background-position: 0 0;
+}
+
+/* Page shell spacing utility */
+.page-shell {
+  @apply mx-auto w-full max-w-5xl px-8 py-12 sm:px-12 sm:py-16;
+}
+
+.page-shell-wide {
+  @apply mx-auto w-full max-w-6xl px-8 py-12 sm:px-12 sm:py-16;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans antialiased;
+    color-scheme: dark;
+    font-feature-settings: "ss01" on, "kern" on;
+    letter-spacing: -0.01em;
+  }
+
+  body {
+    @apply bg-background text-foreground min-h-dvh;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    @apply min-h-dvh;
+  }
+
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
