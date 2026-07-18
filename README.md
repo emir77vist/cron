@@ -36,3 +36,14 @@ npm run preview
 ```
 
 Opening scene plays once per browser session (`sessionStorage`). Skip with **Esc** or the Skip control.
+
+## Deploy
+
+Live: **https://emir77vist.github.io/cron/**
+
+Static site on GitHub Pages from the `gh-pages` branch.
+
+```bash
+GITHUB_PAGES=true npm run build
+# then publish dist/ to gh-pages (see deploy history)
+```
